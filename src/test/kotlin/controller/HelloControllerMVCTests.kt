@@ -48,5 +48,51 @@ class HelloControllerMVCTests {
             .andExpect(jsonPath("$.timestamp").exists())
             .andExpect(jsonPath("$.locale").exists())
     }
-    
+
+    /**
+     * Test case to verify that returns home page with English locale and default message
+     */
+    @Test
+    fun `should return home page in English with default message`() {
+        mockMvc.perform(get("/").param("lang", "en"))
+            .andDo(print())
+            .andExpect(status().isOk)
+            .andExpect(view().name("welcome"))
+            .andExpect(model().attributeExists("message"))
+            .andExpect(model().attribute("name", equalTo("")))
+            .andExpect(model().attributeExists("currentLocale"))
+            .andExpect(model().attribute("currentLocale", equalTo("en")))
+            .andExpect(model().attribute("message", equalTo("Welcome to the Modern Web App!")))
+    }
+
+    /**
+     * Test case to verify that returns home page with Spanish locale and default message
+     */
+    @Test
+    fun `should return home page in Spanish with default message`() {
+        mockMvc.perform(get("/").param("lang", "es"))
+            .andDo(print())
+            .andExpect(status().isOk)
+            .andExpect(view().name("welcome"))
+            .andExpect(model().attributeExists("message"))
+            .andExpect(model().attribute("name", equalTo("")))
+            .andExpect(model().attributeExists("currentLocale"))
+            .andExpect(model().attribute("message", equalTo("¡Bienvenido a la Aplicación Web")))
+    }
+
+    /**
+     *  Test case to verify that returns home page with Spanish locale whit personalized message "Pablo"
+     */
+
+    @Test
+    fun `should return home page in Spanish and personalized message for Pablo`() {
+        mockMvc.perform(get("/").param("lang", "es").param("name", "Pablo"))
+            .andDo(print())
+            .andExpect(status().isOk)
+            .andExpect(view().name("welcome"))
+            .andExpect(model().attributeExists("message"))
+            .andExpect(model().attribute("name", equalTo("Pablo")))
+            .andExpect(model().attributeExists("currentLocale"))
+            .andExpect(model().attribute("message", equalTo("¡Hola, Pablo!")))
+    }
 }

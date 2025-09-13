@@ -78,4 +78,69 @@ class IntegrationTest {
         assertThat(response.body).contains("Health Check")
         assertThat(response.body).contains("Learning Notes:")
     }
+
+    /**
+     * Test case that return English page by default.
+     * 
+     */
+    @Test
+    fun `should return English page by default`() {
+            val response = restTemplate.getForEntity("http://localhost:$port?lang=en", String::class.java)
+
+            assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
+            assertThat(response.body).contains("Welcome to the Modern Web App!")
+            assertThat(response.body).doesNotContain("¡Bienvenido a la Aplicación Web Moderna!")
+            assertThat(response.body).contains("Interactive HTTP Testing &amp; Debug")
+            assertThat(response.body).contains("Client-Side Educational Tool")
+    }
+
+    /**
+     * Test case that return Spanish page when requested.
+     * 
+     */
+    @Test
+    fun `should return Spanish page when requested`() {
+            val response = restTemplate.getForEntity("http://localhost:$port?lang=es", String::class.java)
+
+            assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
+            assertThat(response.body).contains("¡Bienvenido a la Aplicación Web")
+            assertThat(response.body).doesNotContain("Welcome to the Modern Web App!")
+            assertThat(response.body).contains("HTTP Interactivas y Depuración")
+            assertThat(response.body).contains("Herramienta Educativa del Cliente")
+    }
+
+    /**
+     * Test case return spanish personalized greeting for Pablo.
+     */
+
+    @Test
+    fun `should return spanish personalized greeting for Pablo`() {
+            val response = restTemplate.getForEntity("http://localhost:$port?name=Pablo&lang=es", String::class.java)
+
+            assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
+            assertThat(response.body).contains("¡Hola, Pablo!")
+            assertThat(response.body).doesNotContain("Hello, Pablo!")
+            assertThat(response.body).doesNotContain("Welcome to the Modern Web App!")
+            assertThat(response.body).contains("Pruebas HTTP Interactivas y Depuración")
+            assertThat(response.body).contains("Herramienta Educativa del Cliente")
+            
+    }
+
+    /**
+     * Test case sholud return API response in spanish when requested.
+     */
+
+    @Test
+    fun `should return API response in spanish when requested`() {      
+            val response = restTemplate.getForEntity("http://localhost:$port/api/hello?name=Test&lang=es", String::class.java)
+
+            assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
+            assertThat(response.headers.contentType).isEqualTo(MediaType.APPLICATION_JSON)
+            assertThat(response.body).contains("¡Hola, Test!")
+            assertThat(response.body).doesNotContain("Hello, Test!")
+            assertThat(response.body).contains("timestamp")
+            assertThat(response.body).contains("locale")
+    }
+         
+
 }

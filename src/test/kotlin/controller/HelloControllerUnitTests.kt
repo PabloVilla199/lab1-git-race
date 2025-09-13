@@ -72,4 +72,47 @@ class HelloControllerUnitTests {
         assertThat(response["locale"]).isEqualTo("en")
         assertThat(response["timestamp"]).isNotNull()
     }
+
+    /**
+     * Test for returning the default welcome in spanish
+     */
+
+    @Test
+    fun `should return welcome view with default message in spanish`() {
+        val locale = Locale.forLanguageTag("es")
+        val expectedMessage = "¡Bienvenido a la Aplicación Web Moderna!"
+        
+        `when`(messageSource.getMessage("app.message", null, locale))
+            .thenReturn(expectedMessage)
+        
+        val view = controller.welcome(model, "", locale)
+        
+        assertThat(view).isEqualTo("welcome")
+        assertThat(model.getAttribute("message")).isEqualTo(expectedMessage)
+        assertThat(model.getAttribute("name")).isEqualTo("")
+        assertThat(model.getAttribute("currentLocale")).isEqualTo("es")
+    }
+
+    /**
+     * Test for returning a personalized greeting in spanish
+     */
+
+    @Test
+    fun `should return welcome view with personalized message in spanish`() {
+        val locale = Locale.forLanguageTag("es")
+        val name = "Pablo"
+        val expectedMessage = "¡Hola, Pablo!"
+        
+        `when`(messageSource.getMessage("greeting.hello", arrayOf(name), locale))
+            .thenReturn(expectedMessage)
+        
+        val view = controller.welcome(model, name, locale)
+        
+        assertThat(view).isEqualTo("welcome")
+        assertThat(model.getAttribute("message")).isEqualTo(expectedMessage)
+        assertThat(model.getAttribute("name")).isEqualTo(name)
+        assertThat(model.getAttribute("currentLocale")).isEqualTo("es")
+    }
+
+
 }
