@@ -55,6 +55,7 @@ according to the request parameters. This ensured the feature works as expected 
 ## AI Disclosure
 ### AI Tools Used
 ChatGPT
+
 Cloud
 
 ### AI-Assisted Work
@@ -65,7 +66,6 @@ Cloud
 - IA 20%, My Work 80%.
 
 
-### Original Work
 ### Original Work
 My work consisted in implementing the internationalization feature in the application. I first explored the Spring Boot documentation to understand how to configure localization and message handling. 
 
