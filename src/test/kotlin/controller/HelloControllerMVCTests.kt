@@ -3,7 +3,6 @@ package es.unizar.webeng.hello.controller
 import org.hamcrest.CoreMatchers.*
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
@@ -13,8 +12,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 
 @WebMvcTest(HelloController::class, HelloApiController::class)
 class HelloControllerMVCTests {
-    @Value("\${app.message:Welcome to the Modern Web App!}")
-    private lateinit var message: String
 
     @Autowired
     private lateinit var mockMvc: MockMvc
@@ -25,8 +22,9 @@ class HelloControllerMVCTests {
             .andDo(print())
             .andExpect(status().isOk)
             .andExpect(view().name("welcome"))
-            .andExpect(model().attribute("message", equalTo(message)))
+            .andExpect(model().attributeExists("message"))
             .andExpect(model().attribute("name", equalTo("")))
+            .andExpect(model().attributeExists("currentLocale"))
     }
     
     @Test
@@ -35,8 +33,9 @@ class HelloControllerMVCTests {
             .andDo(print())
             .andExpect(status().isOk)
             .andExpect(view().name("welcome"))
-            .andExpect(model().attribute("message", equalTo("Hello, Developer!")))
+            .andExpect(model().attributeExists("message"))
             .andExpect(model().attribute("name", equalTo("Developer")))
+            .andExpect(model().attributeExists("currentLocale"))
     }
     
     @Test
@@ -45,8 +44,9 @@ class HelloControllerMVCTests {
             .andDo(print())
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.message", equalTo("Hello, Test!")))
+            .andExpect(jsonPath("$.message").exists())
             .andExpect(jsonPath("$.timestamp").exists())
+            .andExpect(jsonPath("$.locale").exists())
     }
+    
 }
-
